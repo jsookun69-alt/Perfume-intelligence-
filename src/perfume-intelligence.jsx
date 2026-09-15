@@ -1,0 +1,513 @@
+import React, { useState, useMemo } from "react";
+import { Search, X, ExternalLink, Sparkles } from "lucide-react";
+
+const PERFUMES = [
+  {"id":"bleu-de-chanel-edp","name":"Bleu de Chanel","brand":"Chanel","year":2014,"concentration":"EDP","gender":"Masculine","family":"Woody Aromatic","subfamilies":["Citrus","Spicy"],"notes":{"top":["Grapefruit","Lemon","Mint","Pink Pepper","Citrus"],"heart":["Ginger","Iso E Super","Nutmeg","Jasmine"],"base":["Labdanum","Sandalwood","Patchouli","Vetiver","Incense","Cedar","White Musk"]},"accords":[{"name":"Woody","strength":9},{"name":"Citrus","strength":7},{"name":"Aromatic","strength":6},{"name":"Amber","strength":5}],"longevity":7,"projection":6,"priceTier":"Premium"},
+    {"id":"dior-sauvage-edt","name":"Sauvage","brand":"Dior","year":2015,"concentration":"EDT","gender":"Masculine","family":"Fresh Spicy","subfamilies":["Aromatic","Ambery"],"notes":{"top":["Bergamot","Pepper"],"heart":["Sichuan Pepper","Lavender","Pink Pepper","Vetiver","Patchouli","Geranium","Elemi"],"base":["Ambroxan","Cedar","Labdanum"]},"accords":[{"name":"Amber","strength":8},{"name":"Citrus","strength":6},{"name":"Aromatic","strength":7},{"name":"Woody","strength":5}],"longevity":8,"projection":8,"priceTier":"Mid"},
+      {"id":"creed-aventus","name":"Aventus","brand":"Creed","year":2010,"concentration":"EDP","gender":"Masculine","family":"Fruity Chypre","subfamilies":["Woody","Smoky"],"notes":{"top":["Pineapple","Blackcurrant","Apple","Bergamot"],"heart":["Juniper Berries","Birch","Patchouli","Jasmine"],"base":["Musk","Oak Moss","Ambergris","Vanilla"]},"accords":[{"name":"Fruity","strength":8},{"name":"Smoky","strength":7},{"name":"Woody","strength":7},{"name":"Chypre","strength":5}],"longevity":8,"projection":7,"priceTier":"Luxury"},
+        {"id":"tf-oud-wood","name":"Oud Wood","brand":"Tom Ford","year":2007,"concentration":"EDP","gender":"Unisex","family":"Woody","subfamilies":["Oriental","Spicy"],"notes":{"top":["Rosewood","Cardamom","Chinese Pepper"],"heart":["Oud","Sandalwood","Palisander"],"base":["Vanilla","Amber","Tonka Bean"]},"accords":[{"name":"Woody","strength":9},{"name":"Amber","strength":6},{"name":"Spicy","strength":5},{"name":"Oud","strength":8}],"longevity":8,"projection":5,"priceTier":"Luxury"},
+          {"id":"ysl-la-nuit-de-lhomme","name":"La Nuit de L'Homme","brand":"Yves Saint Laurent","year":2009,"concentration":"EDT","gender":"Masculine","family":"Woody Spicy","subfamilies":["Aromatic"],"notes":{"top":["Cardamom","Bergamot","Cedar"],"heart":["Lavender","Sage"],"base":["Coumarin","Vetiver","Caraway"]},"accords":[{"name":"Aromatic","strength":8},{"name":"Spicy","strength":6},{"name":"Woody","strength":6}],"longevity":6,"projection":6,"priceTier":"Mid"},
+            {"id":"versace-eros","name":"Eros","brand":"Versace","year":2012,"concentration":"EDT","gender":"Masculine","family":"Aromatic Fougere","subfamilies":["Sweet"],"notes":{"top":["Mint","Green Apple","Lemon"],"heart":["Tonka Bean","Ambroxan","Geranium"],"base":["Vanilla","Vetiver","Oak Moss","Cedar"]},"accords":[{"name":"Sweet","strength":7},{"name":"Aromatic","strength":6},{"name":"Amber","strength":6},{"name":"Fresh","strength":5}],"longevity":8,"projection":8,"priceTier":"Mid"},
+              {"id":"paco-1million","name":"1 Million","brand":"Paco Rabanne","year":2008,"concentration":"EDT","gender":"Masculine","family":"Oriental Spicy","subfamilies":["Leather"],"notes":{"top":["Blood Mandarin","Grapefruit","Mint"],"heart":["Rose","Cinnamon","Spicy Notes"],"base":["Leather","Amber","Patchouli"]},"accords":[{"name":"Amber","strength":7},{"name":"Spicy","strength":7},{"name":"Leather","strength":6},{"name":"Citrus","strength":5}],"longevity":7,"projection":7,"priceTier":"Mid"},
+                {"id":"chanel-no5","name":"No. 5","brand":"Chanel","year":1921,"concentration":"EDP","gender":"Feminine","family":"Aldehyde Floral","subfamilies":["Powdery"],"notes":{"top":["Aldehydes","Ylang-Ylang","Neroli","Bergamot"],"heart":["Iris","Rose","Lily of the Valley"],"base":["Sandalwood","Vanilla","Vetiver","Musk"]},"accords":[{"name":"Floral","strength":8},{"name":"Powdery","strength":7},{"name":"Aldehydic","strength":8},{"name":"Woody","strength":4}],"longevity":7,"projection":5,"priceTier":"Luxury"},
+                  {"id":"guerlain-shalimar","name":"Shalimar","brand":"Guerlain","year":1925,"concentration":"EDP","gender":"Feminine","family":"Oriental","subfamilies":["Vanilla","Powdery"],"notes":{"top":["Bergamot","Lemon"],"heart":["Iris","Jasmine","Rose"],"base":["Vanilla","Tonka Bean","Opoponax","Incense"]},"accords":[{"name":"Vanilla","strength":8},{"name":"Oriental","strength":8},{"name":"Powdery","strength":6},{"name":"Citrus","strength":4}],"longevity":8,"projection":6,"priceTier":"Premium"},
+                    {"id":"jpg-le-male","name":"Le Male","brand":"Jean Paul Gaultier","year":1995,"concentration":"EDT","gender":"Masculine","family":"Oriental Fougere","subfamilies":["Sweet","Spicy"],"notes":{"top":["Mint","Lavender","Bergamot","Cardamom"],"heart":["Cinnamon","Cumin","Caraway","Orange Blossom"],"base":["Vanilla","Sandalwood","Tonka Bean","Amber"]},"accords":[{"name":"Sweet","strength":7},{"name":"Aromatic","strength":7},{"name":"Vanilla","strength":6},{"name":"Spicy","strength":6}],"longevity":8,"projection":7,"priceTier":"Mid"},
+                      {"id":"armani-acqua-di-gio","name":"Acqua di Gio","brand":"Giorgio Armani","year":1996,"concentration":"EDT","gender":"Masculine","family":"Aromatic Aquatic","subfamilies":["Citrus","Marine"],"notes":{"top":["Lime","Lemon","Bergamot","Jasmine","Marine Notes"],"heart":["Sea Notes","Calone","Rosemary","Peppermint"],"base":["White Musk","Cedar","Oakmoss","Patchouli"]},"accords":[{"name":"Aquatic","strength":8},{"name":"Citrus","strength":7},{"name":"Aromatic","strength":6},{"name":"Woody","strength":4}],"longevity":6,"projection":6,"priceTier":"Mid"},
+                        {"id":"dior-jadore","name":"J'adore","brand":"Dior","year":1999,"concentration":"EDP","gender":"Feminine","family":"Floral Fruity","subfamilies":["Woody"],"notes":{"top":["Pear","Melon","Magnolia","Peach"],"heart":["Jasmine","Rose","Freesia","Orchid"],"base":["Musk","Blackberry Musk"]},"accords":[{"name":"Floral","strength":9},{"name":"Fruity","strength":6},{"name":"Musky","strength":5}],"longevity":7,"projection":6,"priceTier":"Premium"},
+                          {"id":"chanel-coco-mademoiselle","name":"Coco Mademoiselle","brand":"Chanel","year":2001,"concentration":"EDP","gender":"Feminine","family":"Chypre Floral","subfamilies":["Oriental"],"notes":{"top":["Orange","Bergamot","Mandarin"],"heart":["Jasmine","Rose","Mimosa","Litchi"],"base":["Patchouli","Vetiver","Vanilla","White Musk"]},"accords":[{"name":"Chypre","strength":7},{"name":"Floral","strength":8},{"name":"Woody","strength":5},{"name":"Vanilla","strength":4}],"longevity":8,"projection":7,"priceTier":"Luxury"},
+                            {"id":"ysl-black-opium","name":"Black Opium","brand":"Yves Saint Laurent","year":2014,"concentration":"EDP","gender":"Feminine","family":"Oriental Gourmand","subfamilies":["Coffee","Sweet"],"notes":{"top":["Pear","Pink Pepper","Orange Blossom"],"heart":["Coffee","Jasmine","Bitter Almond"],"base":["Vanilla","Patchouli","Cedar","Cashmere Wood"]},"accords":[{"name":"Gourmand","strength":8},{"name":"Coffee","strength":7},{"name":"Vanilla","strength":7},{"name":"Floral","strength":5}],"longevity":8,"projection":7,"priceTier":"Premium"},
+                              {"id":"lancome-la-vie-est-belle","name":"La Vie Est Belle","brand":"Lancome","year":2012,"concentration":"EDP","gender":"Feminine","family":"Floral Gourmand","subfamilies":["Fruity"],"notes":{"top":["Blackcurrant","Pear"],"heart":["Iris","Jasmine","Orange Blossom"],"base":["Praline","Vanilla","Patchouli","Tonka Bean"]},"accords":[{"name":"Gourmand","strength":8},{"name":"Floral","strength":7},{"name":"Vanilla","strength":6},{"name":"Fruity","strength":5}],"longevity":8,"projection":6,"priceTier":"Premium"},
+                                {"id":"prada-luna-rossa-carbon","name":"Luna Rossa Carbon","brand":"Prada","year":2018,"concentration":"EDT","gender":"Masculine","family":"Aromatic","subfamilies":["Woody","Fresh"],"notes":{"top":["Lavender","Aldehydes","Mint"],"heart":["Ambroxan","Myrtle"],"base":["Vetiver","Musk"]},"accords":[{"name":"Aromatic","strength":8},{"name":"Amber","strength":6},{"name":"Fresh","strength":6},{"name":"Woody","strength":5}],"longevity":7,"projection":7,"priceTier":"Mid"},
+                                  {"id":"hermes-terre-dhermes","name":"Terre d'Hermes","brand":"Hermes","year":2006,"concentration":"EDT","gender":"Masculine","family":"Woody Earthy","subfamilies":["Citrus","Mineral"],"notes":{"top":["Orange","Grapefruit"],"heart":["Pepper","Pelargonium","Flint"],"base":["Vetiver","Cedar","Patchouli","Benzoin"]},"accords":[{"name":"Woody","strength":8},{"name":"Earthy","strength":7},{"name":"Citrus","strength":6},{"name":"Mineral","strength":5}],"longevity":7,"projection":6,"priceTier":"Premium"},
+                                    {"id":"dior-homme-intense","name":"Dior Homme Intense","brand":"Dior","year":2011,"concentration":"EDP","gender":"Masculine","family":"Woody Floral","subfamilies":["Powdery"],"notes":{"top":["Lavender","Bergamot"],"heart":["Iris","Pear","Ambrette"],"base":["Vetiver","Cedar","Amber"]},"accords":[{"name":"Powdery","strength":8},{"name":"Woody","strength":7},{"name":"Iris","strength":7},{"name":"Amber","strength":5}],"longevity":8,"projection":6,"priceTier":"Premium"},
+                                      {"id":"mfk-baccarat-rouge-540","name":"Baccarat Rouge 540","brand":"Maison Francis Kurkdjian","year":2015,"concentration":"EDP","gender":"Unisex","family":"Amber Floral","subfamilies":["Woody","Sweet"],"notes":{"top":["Saffron","Jasmine"],"heart":["Amberwood","Ambergris","Hedione"],"base":["Fir Resin","Cedar","Sugar","Ambroxan","Oakmoss"]},"accords":[{"name":"Amber","strength":9},{"name":"Sweet","strength":7},{"name":"Woody","strength":6},{"name":"Floral","strength":5}],"longevity":9,"projection":8,"priceTier":"Luxury"},
+                                        {"id":"tf-tobacco-vanille","name":"Tobacco Vanille","brand":"Tom Ford","year":2007,"concentration":"EDP","gender":"Unisex","family":"Oriental Spicy","subfamilies":["Sweet","Tobacco"],"notes":{"top":["Tobacco Leaf","Spicy Notes"],"heart":["Vanilla","Cacao","Tonka Bean"],"base":["Dried Fruits","Woody Notes"]},"accords":[{"name":"Tobacco","strength":9},{"name":"Vanilla","strength":8},{"name":"Sweet","strength":7},{"name":"Spicy","strength":6}],"longevity":9,"projection":7,"priceTier":"Luxury"},
+                                          {"id":"chanel-bleu-parfum","name":"Bleu de Chanel Parfum","brand":"Chanel","year":2018,"concentration":"Parfum","gender":"Masculine","family":"Woody Amber","subfamilies":["Citrus"],"notes":{"top":["Mandarin","Lemon","Mint"],"heart":["Cedar","Sandalwood","Ginger"],"base":["Sandalwood","Amber","Patchouli","Labdanum"]},"accords":[{"name":"Woody","strength":9},{"name":"Amber","strength":7},{"name":"Citrus","strength":5}],"longevity":9,"projection":6,"priceTier":"Premium"},
+                                            {"id":"azzaro-most-wanted","name":"Most Wanted","brand":"Azzaro","year":2021,"concentration":"EDP","gender":"Masculine","family":"Amber Spicy","subfamilies":["Sweet"],"notes":{"top":["Cardamom","Ginger","Bergamot"],"heart":["Sage","Toffee"],"base":["Amberwood","Fava Bean"]},"accords":[{"name":"Amber","strength":8},{"name":"Sweet","strength":7},{"name":"Spicy","strength":6}],"longevity":8,"projection":8,"priceTier":"Mid"},
+                                              {"id":"carolina-herrera-good-girl","name":"Good Girl","brand":"Carolina Herrera","year":2016,"concentration":"EDP","gender":"Feminine","family":"Oriental Floral","subfamilies":["Sweet"],"notes":{"top":["Almond","Coffee","Bergamot","Lemon"],"heart":["Jasmine","Tuberose"],"base":["Tonka Bean","Cacao","Vanilla","Sandalwood"]},"accords":[{"name":"Sweet","strength":8},{"name":"Floral","strength":7},{"name":"Vanilla","strength":7},{"name":"Gourmand","strength":5}],"longevity":8,"projection":7,"priceTier":"Premium"},
+                                                {"id":"gucci-bloom","name":"Bloom","brand":"Gucci","year":2017,"concentration":"EDP","gender":"Feminine","family":"Floral","subfamilies":["White Floral"],"notes":{"top":["Jasmine","Tuberose"],"heart":["Orange Blossom","Honeysuckle"],"base":["Sambac Jasmine","Rangoon Creeper"]},"accords":[{"name":"Floral","strength":9},{"name":"White Floral","strength":8},{"name":"Green","strength":4}],"longevity":6,"projection":5,"priceTier":"Premium"},
+                                                  {"id":"marc-jacobs-daisy","name":"Daisy","brand":"Marc Jacobs","year":2007,"concentration":"EDT","gender":"Feminine","family":"Floral Fruity","subfamilies":["Fresh"],"notes":{"top":["Wild Strawberry","Violet Leaf","Grapefruit"],"heart":["Gardenia","Violet","Jasmine"],"base":["Musk","Vanilla","White Woods"]},"accords":[{"name":"Floral","strength":7},{"name":"Fruity","strength":6},{"name":"Fresh","strength":6},{"name":"Musky","strength":4}],"longevity":5,"projection":4,"priceTier":"Mid"},
+                                                    {"id":"chanel-chance-eau-tendre","name":"Chance Eau Tendre","brand":"Chanel","year":2010,"concentration":"EDT","gender":"Feminine","family":"Floral Fruity","subfamilies":["Musky"],"notes":{"top":["Quince","Grapefruit"],"heart":["Jasmine","Hyacinth"],"base":["White Musk","Iris","Amber"]},"accords":[{"name":"Floral","strength":7},{"name":"Fruity","strength":6},{"name":"Musky","strength":6}],"longevity":6,"projection":5,"priceTier":"Premium"},
+                                                      {"id":"byredo-gypsy-water","name":"Gypsy Water","brand":"Byredo","year":2008,"concentration":"EDP","gender":"Unisex","family":"Woody Aromatic","subfamilies":["Citrus"],"notes":{"top":["Bergamot","Lemon","Pepper"],"heart":["Incense","Pine Needles","Orris"],"base":["Sandalwood","Amber","Vanilla"]},"accords":[{"name":"Woody","strength":7},{"name":"Aromatic","strength":6},{"name":"Amber","strength":5},{"name":"Citrus","strength":5}],"longevity":6,"projection":5,"priceTier":"Luxury"},
+                                                        {"id":"le-labo-santal-33","name":"Santal 33","brand":"Le Labo","year":2011,"concentration":"EDP","gender":"Unisex","family":"Woody","subfamilies":["Leather","Spicy"],"notes":{"top":["Cardamom","Violet","Iris"],"heart":["Sandalwood","Papyrus"],"base":["Cedarwood","Leather","Amber","Musk"]},"accords":[{"name":"Woody","strength":9},{"name":"Leather","strength":6},{"name":"Spicy","strength":5},{"name":"Amber","strength":5}],"longevity":7,"projection":6,"priceTier":"Luxury"},
+                                                          {"id":"prada-luna-rossa-ocean","name":"Luna Rossa Ocean","brand":"Prada","year":2021,"concentration":"EDT","gender":"Masculine","family":"Aromatic Aquatic","subfamilies":["Fresh"],"notes":{"top":["Grapefruit","Sea Water","Mint"],"heart":["Clary Sage","Ambroxan"],"base":["Musk","Ambrox"]},"accords":[{"name":"Aquatic","strength":8},{"name":"Fresh","strength":7},{"name":"Aromatic","strength":6},{"name":"Amber","strength":5}],"longevity":6,"projection":6,"priceTier":"Mid"},
+                                                            {"id":"invictus-paco-rabanne","name":"Invictus","brand":"Paco Rabanne","year":2013,"concentration":"EDT","gender":"Masculine","family":"Woody Aquatic","subfamilies":["Fresh"],"notes":{"top":["Grapefruit","Marine Notes","Mandarin"],"heart":["Bay Leaf","Jasmine"],"base":["Guaiac Wood","Patchouli","Oakmoss","Ambergris"]},"accords":[{"name":"Aquatic","strength":7},{"name":"Woody","strength":6},{"name":"Fresh","strength":7},{"name":"Citrus","strength":5}],"longevity":7,"projection":7,"priceTier":"Mid"},
+                                                              {"id":"issey-miyake-lde","name":"L'Eau d'Issey Pour Homme","brand":"Issey Miyake","year":1994,"concentration":"EDT","gender":"Masculine","family":"Aromatic Aquatic","subfamilies":["Woody"],"notes":{"top":["Yuzu","Lemon"],"heart":["Nutmeg","Cedar","Wisteria"],"base":["Sandalwood","Amber","Tobacco"]},"accords":[{"name":"Aromatic","strength":7},{"name":"Aquatic","strength":6},{"name":"Woody","strength":6},{"name":"Citrus","strength":5}],"longevity":6,"projection":5,"priceTier":"Mid"},
+                                                                {"id":"dolce-gabbana-light-blue","name":"Light Blue","brand":"Dolce & Gabbana","year":2001,"concentration":"EDT","gender":"Feminine","family":"Citrus Fruity","subfamilies":["Fresh"],"notes":{"top":["Sicilian Lemon","Apple","Cedar","Bluebell"],"heart":["Bamboo","Jasmine","White Rose"],"base":["Musk","Amber","Cedar"]},"accords":[{"name":"Citrus","strength":8},{"name":"Fresh","strength":7},{"name":"Fruity","strength":6},{"name":"Floral","strength":4}],"longevity":5,"projection":5,"priceTier":"Mid"},
+                                                                  {"id":"dg-the-one","name":"The One","brand":"Dolce & Gabbana","year":2008,"concentration":"EDT","gender":"Masculine","family":"Oriental Spicy","subfamilies":["Woody"],"notes":{"top":["Grapefruit","Coriander","Basil"],"heart":["Ginger","Cardamom","Tobacco"],"base":["Amber","Cedar","Musk"]},"accords":[{"name":"Spicy","strength":7},{"name":"Woody","strength":6},{"name":"Amber","strength":6},{"name":"Oriental","strength":5}],"longevity":7,"projection":6,"priceTier":"Mid"},
+                                                                    {"id":"viktor-rolf-spicebomb","name":"Spicebomb","brand":"Viktor & Rolf","year":2012,"concentration":"EDT","gender":"Masculine","family":"Oriental Spicy","subfamilies":["Tobacco"],"notes":{"top":["Bergamot","Pink Pepper","Grapefruit"],"heart":["Cinnamon","Saffron","Paprika"],"base":["Tobacco","Vetiver","Leather"]},"accords":[{"name":"Spicy","strength":9},{"name":"Tobacco","strength":6},{"name":"Woody","strength":5},{"name":"Leather","strength":5}],"longevity":7,"projection":7,"priceTier":"Mid"},
+                                                                      {"id":"montblanc-explorer","name":"Explorer","brand":"Montblanc","year":2019,"concentration":"EDP","gender":"Masculine","family":"Woody Aromatic","subfamilies":["Earthy"],"notes":{"top":["Bergamot","Ginger","Clary Sage"],"heart":["Vetiver","Patchouli","Leather"],"base":["Ambroxan","Cocoa Bean","Woody Notes"]},"accords":[{"name":"Woody","strength":7},{"name":"Earthy","strength":6},{"name":"Amber","strength":5},{"name":"Leather","strength":4}],"longevity":7,"projection":6,"priceTier":"Mid"},
+                                                                        {"id":"burberry-her","name":"Her","brand":"Burberry","year":2018,"concentration":"EDP","gender":"Feminine","family":"Fruity Floral","subfamilies":["Gourmand"],"notes":{"top":["Strawberry","Raspberry","Blackberry"],"heart":["Violet","Jasmine"],"base":["Musk","Vanilla","Amber"]},"accords":[{"name":"Fruity","strength":8},{"name":"Floral","strength":6},{"name":"Gourmand","strength":5},{"name":"Sweet","strength":5}],"longevity":6,"projection":5,"priceTier":"Mid"},
+                                                                          {"id":"narciso-rodriguez-for-her","name":"For Her","brand":"Narciso Rodriguez","year":2003,"concentration":"EDP","gender":"Feminine","family":"Floral Musk","subfamilies":["Woody"],"notes":{"top":["Peach","Orange Blossom"],"heart":["Musk","Amber","Vanilla"],"base":["Musk","Vanilla","Amber","Cedar"]},"accords":[{"name":"Musky","strength":9},{"name":"Floral","strength":5},{"name":"Woody","strength":5},{"name":"Vanilla","strength":4}],"longevity":8,"projection":5,"priceTier":"Premium"},
+                                                                            {"id":"thierry-mugler-alien","name":"Alien","brand":"Mugler","year":2005,"concentration":"EDP","gender":"Feminine","family":"Amber Floral","subfamilies":["Woody"],"notes":{"top":["Jasmine Sambac"],"heart":["Cashmeran"],"base":["Amber","Woody Notes"]},"accords":[{"name":"Amber","strength":8},{"name":"Floral","strength":6},{"name":"Woody","strength":5}],"longevity":8,"projection":7,"priceTier":"Premium"},
+                                                                              {"id":"thierry-mugler-angel","name":"Angel","brand":"Mugler","year":1992,"concentration":"EDP","gender":"Feminine","family":"Oriental Gourmand","subfamilies":["Sweet"],"notes":{"top":["Bergamot","Cassis","Melon"],"heart":["Honey","Apricot","Jasmine"],"base":["Chocolate","Caramel","Patchouli","Vanilla"]},"accords":[{"name":"Gourmand","strength":9},{"name":"Sweet","strength":8},{"name":"Vanilla","strength":6},{"name":"Patchouli","strength":5}],"longevity":9,"projection":8,"priceTier":"Premium"},
+                                                                                {"id":"givenchy-gentleman","name":"Gentleman","brand":"Givenchy","year":2017,"concentration":"EDP","gender":"Masculine","family":"Woody Aromatic","subfamilies":["Sweet","Powdery"],"notes":{"top":["Pear","Lavender"],"heart":["Iris","Black Vanilla Pod"],"base":["Praline","Woody Notes","Patchouli"]},"accords":[{"name":"Sweet","strength":7},{"name":"Woody","strength":6},{"name":"Powdery","strength":6},{"name":"Aromatic","strength":5}],"longevity":7,"projection":6,"priceTier":"Mid"},
+                                                                                  {"id":"bvlgari-man-in-black","name":"Man in Black","brand":"Bvlgari","year":2014,"concentration":"EDP","gender":"Masculine","family":"Oriental Spicy","subfamilies":["Leather"],"notes":{"top":["Rum","Spicy Notes"],"heart":["Tuberose","Leather"],"base":["Tonka Bean","Guaiac Wood","Amber"]},"accords":[{"name":"Spicy","strength":7},{"name":"Leather","strength":7},{"name":"Amber","strength":6},{"name":"Sweet","strength":5}],"longevity":8,"projection":7,"priceTier":"Mid"},
+                                                                                    {"id":"hugo-boss-bottled","name":"Boss Bottled","brand":"Hugo Boss","year":1998,"concentration":"EDT","gender":"Masculine","family":"Woody Spicy","subfamilies":["Fruity"],"notes":{"top":["Apple","Lemon","Plum"],"heart":["Cinnamon","Geranium","Clove"],"base":["Sandalwood","Vetiver","Cedar","Vanilla"]},"accords":[{"name":"Woody","strength":7},{"name":"Spicy","strength":6},{"name":"Fruity","strength":5},{"name":"Sweet","strength":4}],"longevity":6,"projection":5,"priceTier":"Budget"},
+                                                                                      {"id":"calvin-klein-ck-one","name":"CK One","brand":"Calvin Klein","year":1994,"concentration":"EDT","gender":"Unisex","family":"Citrus Aromatic","subfamilies":["Fresh"],"notes":{"top":["Bergamot","Lemon","Pineapple","Green Notes"],"heart":["Jasmine","Violet","Nutmeg"],"base":["Musk","Cedar","Amber"]},"accords":[{"name":"Citrus","strength":7},{"name":"Fresh","strength":7},{"name":"Aromatic","strength":5},{"name":"Musky","strength":4}],"longevity":4,"projection":4,"priceTier":"Budget"},
+                                                                                        {"id":"jo-malone-wood-sage-sea-salt","name":"Wood Sage & Sea Salt","brand":"Jo Malone","year":2014,"concentration":"EDC","gender":"Unisex","family":"Aromatic Aquatic","subfamilies":["Woody"],"notes":{"top":["Ambrette Seeds","Sea Salt"],"heart":["Sage"],"base":["Driftwood"]},"accords":[{"name":"Aquatic","strength":8},{"name":"Aromatic","strength":6},{"name":"Woody","strength":5},{"name":"Fresh","strength":6}],"longevity":4,"projection":3,"priceTier":"Premium"},
+                                                                                          {"id":"diptyque-philosykos","name":"Philosykos","brand":"Diptyque","year":1996,"concentration":"EDT","gender":"Unisex","family":"Green Woody","subfamilies":["Fig"],"notes":{"top":["Fig Leaf","Green Notes"],"heart":["Fig","Coconut"],"base":["Cedar","White Woods"]},"accords":[{"name":"Green","strength":8},{"name":"Woody","strength":6},{"name":"Fig","strength":8}],"longevity":5,"projection":4,"priceTier":"Premium"},
+                                                                                            {"id":"amouage-interlude-man","name":"Interlude Man","brand":"Amouage","year":2012,"concentration":"EDP","gender":"Masculine","family":"Oriental Spicy","subfamilies":["Smoky"],"notes":{"top":["Bergamot","Oregano","Pepper"],"heart":["Frankincense","Amber","Labdanum"],"base":["Patchouli","Styrax","Leather"]},"accords":[{"name":"Smoky","strength":9},{"name":"Spicy","strength":7},{"name":"Amber","strength":6},{"name":"Leather","strength":5}],"longevity":9,"projection":7,"priceTier":"Luxury"},
+                                                                                              {"id":"parfums-de-marly-layton","name":"Layton","brand":"Parfums de Marly","year":2016,"concentration":"EDP","gender":"Masculine","family":"Aromatic Fougere","subfamilies":["Vanilla"],"notes":{"top":["Apple","Bergamot","Lavender"],"heart":["Violet","Geranium","Sage"],"base":["Vanilla","Cardamom","Sandalwood"]},"accords":[{"name":"Vanilla","strength":7},{"name":"Aromatic","strength":6},{"name":"Sweet","strength":6},{"name":"Fruity","strength":5}],"longevity":8,"projection":7,"priceTier":"Premium"},
+                                                                                                {"id":"initio-oud-for-greatness","name":"Oud for Greatness","brand":"Initio","year":2016,"concentration":"EDP","gender":"Unisex","family":"Woody","subfamilies":["Spicy","Oud"],"notes":{"top":["Cardamom","Pepper"],"heart":["Oud","Lavender"],"base":["Sandalwood","Musk","Amber"]},"accords":[{"name":"Oud","strength":9},{"name":"Woody","strength":8},{"name":"Spicy","strength":6},{"name":"Amber","strength":5}],"longevity":9,"projection":8,"priceTier":"Luxury"},
+                                                                                                  {"id":"nautica-voyage","name":"Voyage","brand":"Nautica","year":2006,"concentration":"EDT","gender":"Masculine","family":"Aromatic Aquatic","subfamilies":["Fresh"],"notes":{"top":["Apple","Cucumber Melon","Ozone"],"heart":["Water Lotus","Sage","Sea Moss"],"base":["Cedar","Musk","Oakmoss"]},"accords":[{"name":"Aquatic","strength":8},{"name":"Fresh","strength":7},{"name":"Aromatic","strength":5}],"longevity":5,"projection":5,"priceTier":"Budget"},
+                                                                                                    {"id":"zara-vibrant-leather","name":"Vibrant Leather","brand":"Zara","year":2020,"concentration":"EDT","gender":"Masculine","family":"Woody Leather","subfamilies":["Amber"],"notes":{"top":["Cardamom","Bergamot"],"heart":["Leather","Cedar"],"base":["Amber","Musk"]},"accords":[{"name":"Leather","strength":8},{"name":"Woody","strength":6},{"name":"Amber","strength":6}],"longevity":6,"projection":6,"priceTier":"Budget"},
+                                                                                                      {"id":"ariana-grande-cloud","name":"Cloud","brand":"Ariana Grande","year":2018,"concentration":"EDP","gender":"Feminine","family":"Gourmand Floral","subfamilies":["Sweet"],"notes":{"top":["Lavender","Pear","Bergamot"],"heart":["Praline","Coconut","Orchid"],"base":["Musk","Vanilla Orchid","Woody Notes"]},"accords":[{"name":"Gourmand","strength":8},{"name":"Sweet","strength":8},{"name":"Floral","strength":5},{"name":"Musky","strength":5}],"longevity":6,"projection":5,"priceTier":"Budget"},
+                                                                                                        {"id":"victoria-secret-bombshell","name":"Bombshell","brand":"Victoria's Secret","year":2010,"concentration":"EDP","gender":"Feminine","family":"Floral Fruity","subfamilies":["Fresh"],"notes":{"top":["Passionfruit","Grapefruit"],"heart":["Peony","Vanilla Orchid"],"base":["Musk","Woody Notes"]},"accords":[{"name":"Fruity","strength":8},{"name":"Floral","strength":6},{"name":"Fresh","strength":5},{"name":"Sweet","strength":5}],"longevity":6,"projection":5,"priceTier":"Budget"},
+                                                                                                          {"id":"xerjoff-naxos","name":"Naxos","brand":"Xerjoff","year":2012,"concentration":"EDP","gender":"Masculine","family":"Aromatic Gourmand","subfamilies":["Honey"],"notes":{"top":["Lavender","Bergamot"],"heart":["Honey","Tobacco"],"base":["Tonka Bean","Vanilla","Cedar"]},"accords":[{"name":"Honey","strength":8},{"name":"Gourmand","strength":7},{"name":"Aromatic","strength":6},{"name":"Sweet","strength":6}],"longevity":8,"projection":7,"priceTier":"Luxury"},
+                                                                                                            {"id":"creed-green-irish-tweed","name":"Green Irish Tweed","brand":"Creed","year":1985,"concentration":"EDP","gender":"Masculine","family":"Aromatic Fougere","subfamilies":["Green"],"notes":{"top":["Lemon Verbena","Iris"],"heart":["Violet Leaves","Sandalwood"],"base":["Ambergris","Musk","Vetiver"]},"accords":[{"name":"Green","strength":8},{"name":"Aromatic","strength":7},{"name":"Fresh","strength":6},{"name":"Woody","strength":5}],"longevity":7,"projection":6,"priceTier":"Luxury"},
+                                                                                                              {"id":"guerlain-lhomme-ideal","name":"L'Homme Ideal","brand":"Guerlain","year":2014,"concentration":"EDP","gender":"Masculine","family":"Woody Aromatic","subfamilies":["Sweet"],"notes":{"top":["Almond","Bergamot"],"heart":["Cherry","Sage"],"base":["Tonka Bean","Vetiver","Patchouli"]},"accords":[{"name":"Sweet","strength":7},{"name":"Woody","strength":6},{"name":"Aromatic","strength":5},{"name":"Fruity","strength":4}],"longevity":7,"projection":6,"priceTier":"Mid"},
+                                                                                                                {"id":"mfk-grand-soir","name":"Grand Soir","brand":"Maison Francis Kurkdjian","year":2016,"concentration":"EDP","gender":"Unisex","family":"Amber","subfamilies":["Vanilla"],"notes":{"top":["Bergamot"],"heart":["Amber","Benzoin"],"base":["Vanilla","Labdanum","Tonka Bean"]},"accords":[{"name":"Amber","strength":9},{"name":"Vanilla","strength":7},{"name":"Sweet","strength":6}],"longevity":9,"projection":6,"priceTier":"Luxury"},
+                                                                                                                  {"id":"ck-eternity","name":"Eternity","brand":"Calvin Klein","year":1988,"concentration":"EDP","gender":"Feminine","family":"Floral Aromatic","subfamilies":["Green"],"notes":{"top":["Freesia","Mandarin","Sage"],"heart":["Lily","Marigold","Narcissus"],"base":["Sandalwood","Amber","Musk"]},"accords":[{"name":"Floral","strength":7},{"name":"Green","strength":6},{"name":"Aromatic","strength":5},{"name":"Woody","strength":4}],"longevity":6,"projection":5,"priceTier":"Budget"},
+                                                                                                                    {"id":"chloe-eponymous","name":"Chloe","brand":"Chloe","year":2008,"concentration":"EDP","gender":"Feminine","family":"Floral","subfamilies":["Powdery"],"notes":{"top":["Peony","Freesia","Lychee"],"heart":["Rose","Lily of the Valley","Magnolia"],"base":["Cedar","Amber","Musk"]},"accords":[{"name":"Floral","strength":9},{"name":"Powdery","strength":6},{"name":"Musky","strength":4}],"longevity":6,"projection":5,"priceTier":"Premium"}
+                                                                                                                    ];
+                                                                                                                    
+                                                                                                                    // ---------- Fuzzy search ----------
+                                                                                                                    function normalize(s) {
+                                                                                                                    return s.toLowerCase().replace(/[^a-z0-9]/g, "");
+                                                                                                                    }
+                                                                                                                    
+                                                                                                                    function levenshtein(a, b) {
+                                                                                                                    const m = a.length, n = b.length;
+                                                                                                                    if (m === 0) return n;
+                                                                                                                    if (n === 0) return m;
+                                                                                                                    const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+                                                                                                                    for (let i = 0; i <= m; i++) dp[i][0] = i;
+                                                                                                                    for (let j = 0; j <= n; j++) dp[0][j] = j;
+                                                                                                                    for (let i = 1; i <= m; i++) {
+                                                                                                                    for (let j = 1; j <= n; j++) {
+                                                                                                                    const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+                                                                                                                    dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost);
+                                                                                                                    }
+                                                                                                                    }
+                                                                                                                    return dp[m][n];
+                                                                                                                    }
+                                                                                                                    
+                                                                                                                    function searchScore(query, perfume) {
+                                                                                                                    const q = normalize(query);
+                                                                                                                    const name = normalize(perfume.name);
+                                                                                                                    const brand = normalize(perfume.brand);
+                                                                                                                    const combined = normalize(perfume.brand + perfume.name);
+                                                                                                                    if (!q) return 0;
+                                                                                                                    if (name === q || combined === q) return 100;
+                                                                                                                    if (name.startsWith(q)) return 90;
+                                                                                                                    if (name.includes(q)) return 80;
+                                                                                                                    if (combined.includes(q)) return 70;
+                                                                                                                    if (brand.includes(q)) return 55;
+                                                                                                                    const dist = levenshtein(q, name.slice(0, q.length + 3));
+                                                                                                                    const ratio = 1 - dist / Math.max(q.length, name.length, 1);
+                                                                                                                    if (ratio > 0.55) return Math.round(ratio * 60);
+                                                                                                                    return 0;
+                                                                                                                    }
+                                                                                                                    
+                                                                                                                    function accordVector(perfume) {
+                                                                                                                    const v = {};
+                                                                                                                    perfume.accords.forEach((a) => (v[a.name] = a.strength));
+                                                                                                                    return v;
+                                                                                                                    }
+                                                                                                                    
+                                                                                                                    function cosineSim(vA, vB) {
+                                                                                                                    const keys = new Set([...Object.keys(vA), ...Object.keys(vB)]);
+                                                                                                                    let dot = 0, magA = 0, magB = 0;
+                                                                                                                    keys.forEach((k) => {
+                                                                                                                    const a = vA[k] || 0, b = vB[k] || 0;
+                                                                                                                    dot += a * b;
+                                                                                                                    magA += a * a;
+                                                                                                                    magB += b * b;
+                                                                                                                    });
+                                                                                                                    if (magA === 0 || magB === 0) return 0;
+                                                                                                                    return dot / (Math.sqrt(magA) * Math.sqrt(magB));
+                                                                                                                    }
+                                                                                                                    
+                                                                                                                    function allNotes(p) {
+                                                                                                                    return new Set(
+                                                                                                                    [...p.notes.top, ...p.notes.heart, ...p.notes.base].map((n) => n.toLowerCase())
+                                                                                                                    );
+                                                                                                                    }
+                                                                                                                    
+                                                                                                                    function jaccard(setA, setB) {
+                                                                                                                    const inter = [...setA].filter((x) => setB.has(x)).length;
+                                                                                                                    const union = new Set([...setA, ...setB]).size;
+                                                                                                                    return union === 0 ? 0 : inter / union;
+                                                                                                                    }
+                                                                                                                    
+                                                                                                                    function familyBonus(p1, p2) {
+                                                                                                                    if (p1.family === p2.family) return 1;
+                                                                                                                    const sub1 = new Set(p1.subfamilies);
+                                                                                                                    const shared = p2.subfamilies.some((s) => sub1.has(s));
+                                                                                                                    return shared ? 0.5 : 0;
+                                                                                                                    }
+                                                                                                                    
+                                                                                                                    function findSimilar(perfume, all, limit = 4) {
+                                                                                                                    const vA = accordVector(perfume);
+                                                                                                                    const notesA = allNotes(perfume);
+                                                                                                                    return all
+                                                                                                                    .filter((p) => p.id !== perfume.id)
+                                                                                                                    .map((p) => {
+                                                                                                                    const cos = cosineSim(vA, accordVector(p));
+                                                                                                                    const jac = jaccard(notesA, allNotes(p));
+                                                                                                                    const fam = familyBonus(perfume, p);
+                                                                                                                    const score = cos * 0.5 + jac * 0.3 + fam * 0.2;
+                                                                                                                    return { perfume: p, score };
+                                                                                                                    })
+                                                                                                                    .filter((r) => r.score > 0.12)
+                                                                                                                    .sort((a, b) => b.score - a.score)
+                                                                                                                    .slice(0, limit);
+                                                                                                                    }
+                                                                                                                    
+                                                                                                                    function computeRating(p) {
+                                                                                                                    const avgPerf = (p.longevity + p.projection) / 2;
+                                                                                                                    const noteCount = p.notes.top.length + p.notes.heart.length + p.notes.base.length;
+                                                                                                                    const complexity = Math.min(noteCount / 12, 1) * 10;
+                                                                                                                    const accordDiversity = Math.min(p.accords.length / 5, 1) * 10;
+                                                                                                                    const rating = avgPerf * 0.5 + complexity * 0.25 + accordDiversity * 0.25;
+                                                                                                                    return Math.round(rating * 10) / 10;
+                                                                                                                    }
+                                                                                                                    
+                                                                                                                    const AFFILIATE_CONFIG = {
+                                                                                                                    amazonTag: "",
+                                                                                                                    fragranceXAffId: "",
+                                                                                                                    sephoraAffId: "",
+                                                                                                                    };
+                                                                                                                    
+                                                                                                                    const EMAIL_ENDPOINT = "";
+                                                                                                                    
+                                                                                                                    function buildRetailerUrl(retailer, perfume) {
+                                                                                                                    const q = encodeURIComponent(`${perfume.brand} ${perfume.name}`);
+                                                                                                                    switch (retailer.id) {
+                                                                                                                    case "amazon": {
+                                                                                                                    const tag = AFFILIATE_CONFIG.amazonTag;
+                                                                                                                    return `https://www.amazon.com/s?k=${q}${tag ? `&tag=${tag}` : ""}`;
+                                                                                                                    }
+                                                                                                                    case "fragrancex": {
+                                                                                                                    const affId = AFFILIATE_CONFIG.fragranceXAffId;
+                                                                                                                    return `https://www.fragrancex.com/search.aspx?keyword=${q}${affId ? `&aff=${affId}` : ""}`;
+                                                                                                                    }
+                                                                                                                    case "sephora": {
+                                                                                                                    return `https://www.sephora.com/search?keyword=${q}`;
+                                                                                                                    }
+                                                                                                                    default:
+                                                                                                                    return "#";
+                                                                                                                    }
+                                                                                                                    }
+                                                                                                                    
+                                                                                                                    const RETAILERS = [
+                                                                                                                    { id: "sephora", name: "Sephora" },
+                                                                                                                    { id: "fragrancex", name: "FragranceX" },
+                                                                                                                    { id: "amazon", name: "Amazon" },
+                                                                                                                    ];
+                                                                                                                    
+                                                                                                                    function Pyramid({ notes }) {
+                                                                                                                    const tiers = [
+                                                                                                                    { label: "Top", items: notes.top, width: "62%" },
+                                                                                                                    { label: "Heart", items: notes.heart, width: "80%" },
+                                                                                                                    { label: "Base", items: notes.base, width: "100%" },
+                                                                                                                    ];
+                                                                                                                    return (
+                                                                                                                    <div className="flex flex-col gap-3">
+                                                                                                                    {tiers.map((tier) => (
+                                                                                                                    <div key={tier.label} className="flex items-start gap-4">
+                                                                                                                    <div className="w-14 shrink-0 pt-1 text-right text-[10px] uppercase tracking-[0.15em]" style={{ color: "#9C8F7C" }}>
+                                                                                                                    {tier.label}
+                                                                                                                    </div>
+                                                                                                                    <div className="flex-1" style={{ maxWidth: tier.width }}>
+                                                                                                                    <div className="flex flex-wrap gap-1.5">
+                                                                                                                    {tier.items.map((n) => (
+                                                                                                                    <span
+                                                                                                                    key={n}
+                                                                                                                    className="rounded-full px-2.5 py-1 text-xs"
+                                                                                                                    style={{ background: "rgba(201,146,43,0.12)", color: "#C9922B", border: "1px solid rgba(201,146,43,0.3)" }}
+                                                                                                                    >
+                                                                                                                    {n}
+                                                                                                                    </span>
+                                                                                                                    ))}
+                                                                                                                    </div>
+                                                                                                                    </div>
+                                                                                                                    </div>
+                                                                                                                    ))}
+                                                                                                                    </div>
+                                                                                                                    );
+                                                                                                                    }
+                                                                                                                    
+                                                                                                                    function StatBar({ label, value }) {
+                                                                                                                    return (
+                                                                                                                    <div>
+                                                                                                                    <div className="mb-1 flex items-center justify-between text-[11px]" style={{ color: "#9C8F7C" }}>
+                                                                                                                    <span className="uppercase tracking-[0.1em]">{label}</span>
+                                                                                                                    <span style={{ color: "#EDE6DA" }}>{value}/10</span>
+                                                                                                                    </div>
+                                                                                                                    <div className="h-1.5 w-full overflow-hidden rounded-full" style={{ background: "rgba(237,230,218,0.08)" }}>
+                                                                                                                    <div
+                                                                                                                    className="h-full rounded-full"
+                                                                                                                    style={{ width: `${value * 10}%`, background: "linear-gradient(90deg, #6B2737, #C9922B)" }}
+                                                                                                                    />
+                                                                                                                    </div>
+                                                                                                                    </div>
+                                                                                                                    );
+                                                                                                                    }
+                                                                                                                    
+                                                                                                                    function EmailCapture({ perfume }) {
+                                                                                                                    const [email, setEmail] = useState("");
+                                                                                                                    const [status, setStatus] = useState("idle");
+                                                                                                                    
+                                                                                                                    async function handleSubmit(e) {
+                                                                                                                    e.preventDefault();
+                                                                                                                    if (!email.trim() || status === "sending") return;
+                                                                                                                    setStatus("sending");
+                                                                                                                    try {
+                                                                                                                    if (EMAIL_ENDPOINT) {
+                                                                                                                    await fetch(EMAIL_ENDPOINT, {
+                                                                                                                    method: "POST",
+                                                                                                                    headers: { "Content-Type": "application/json" },
+                                                                                                                    body: JSON.stringify({ email, lastViewed: `${perfume.brand} ${perfume.name}` }),
+                                                                                                                    });
+                                                                                                                    } else {
+                                                                                                                    console.log("Email capture (no endpoint set):", email, perfume.name);
+                                                                                                                    }
+                                                                                                                    setStatus("sent");
+                                                                                                                    } catch (err) {
+                                                                                                                    setStatus("error");
+                                                                                                                    }
+                                                                                                                    }
+                                                                                                                    
+                                                                                                                    if (status === "sent") {
+                                                                                                                    return (
+                                                                                                                    <div
+                                                                                                                    className="mt-6 rounded-xl p-4 text-center text-xs"
+                                                                                                                    style={{ background: "rgba(201,146,43,0.08)", border: "1px solid rgba(201,146,43,0.25)", color: "#C9922B" }}
+                                                                                                                    >
+                                                                                                                    You're on the list — we'll send matches worth trying.
+                                                                                                                    </div>
+                                                                                                                    );
+                                                                                                                    }
+                                                                                                                    
+                                                                                                                    return (
+                                                                                                                    <form onSubmit={handleSubmit} className="mt-6 rounded-xl p-4" style={{ background: "rgba(237,230,218,0.03)", border: "1px solid rgba(237,230,218,0.08)" }}>
+                                                                                                                    <div className="mb-2 text-[11px] uppercase tracking-[0.15em]" style={{ color: "#9C8F7C" }}>
+                                                                                                                    Get matched fragrances by email
+                                                                                                                    </div>
+                                                                                                                    <div className="flex gap-2">
+                                                                                                                    <input
+                                                                                                                    type="email"
+                                                                                                                    required
+                                                                                                                    value={email}
+                                                                                                                    onChange={(e) => setEmail(e.target.value)}
+                                                                                                                    placeholder="you@email.com"
+                                                                                                                    className="w-full rounded-full bg-transparent px-4 py-2 text-xs outline-none"
+                                                                                                                    style={{ color: "#EDE6DA", border: "1px solid rgba(237,230,218,0.15)" }}
+                                                                                                                    />
+                                                                                                                    <button
+                                                                                                                    type="submit"
+                                                                                                                    disabled={status === "sending"}
+                                                                                                                    className="shrink-0 rounded-full px-4 py-2 text-xs font-medium transition-opacity hover:opacity-90 disabled:opacity-50"
+                                                                                                                    style={{ background: "#C9922B", color: "#0F0D0B" }}
+                                                                                                                    >
+                                                                                                                    {status === "sending" ? "..." : "Notify me"}
+                                                                                                                    </button>
+                                                                                                                    </div>
+                                                                                                                    {status === "error" && (
+                                                                                                                    <div className="mt-2 text-[11px]" style={{ color: "#B0473F" }}>
+                                                                                                                    Something went wrong — try again in a moment.
+                                                                                                                    </div>
+                                                                                                                    )}
+                                                                                                                    </form>
+                                                                                                                    );
+                                                                                                                    }
+                                                                                                                    
+                                                                                                                    function ResultCard({ perfume, onSelect, similar }) {
+                                                                                                                    const rating = computeRating(perfume);
+                                                                                                                    return (
+                                                                                                                    <div className="rounded-2xl p-6 sm:p-8" style={{ background: "#1A1613", border: "1px solid rgba(237,230,218,0.08)" }}>
+                                                                                                                    <div className="flex flex-wrap items-start justify-between gap-4">
+                                                                                                                    <div>
+                                                                                                                    <div className="text-[11px] uppercase tracking-[0.2em]" style={{ color: "#C9922B" }}>
+                                                                                                                    {perfume.brand}
+                                                                                                                    </div>
+                                                                                                                    <h2 className="mt-1 font-serif text-3xl" style={{ color: "#EDE6DA" }}>
+                                                                                                                    {perfume.name}
+                                                                                                                    </h2>
+                                                                                                                    <div className="mt-2 flex flex-wrap gap-2 text-[11px]" style={{ color: "#9C8F7C" }}>
+                                                                                                                    <span>{perfume.year}</span>
+                                                                                                                    <span>·</span>
+                                                                                                                    <span>{perfume.concentration}</span>
+                                                                                                                    <span>·</span>
+                                                                                                                    <span>{perfume.gender}</span>
+                                                                                                                    <span>·</span>
+                                                                                                                    <span>{perfume.family}</span>
+                                                                                                                    </div>
+                                                                                                                    </div>
+                                                                                                                    <div className="flex flex-col items-end">
+                                                                                                                    <div className="font-serif text-4xl" style={{ color: "#C9922B" }}>{rating}</div>
+                                                                                                                    <div className="text-[10px] uppercase tracking-[0.15em]" style={{ color: "#9C8F7C" }}>Rating / 10</div>
+                                                                                                                    </div>
+                                                                                                                    </div>
+                                                                                                                    
+                                                                                                                    <div className="my-6 h-px" style={{ background: "rgba(237,230,218,0.08)" }} />
+                                                                                                                    
+                                                                                                                    <Pyramid notes={perfume.notes} />
+                                                                                                                    
+                                                                                                                    <div className="mt-6 grid grid-cols-2 gap-6">
+                                                                                                                    <StatBar label="Longevity" value={perfume.longevity} />
+                                                                                                                    <StatBar label="Projection" value={perfume.projection} />
+                                                                                                                    </div>
+                                                                                                                    
+                                                                                                                    <div className="mt-6 flex flex-wrap gap-2">
+                                                                                                                    {RETAILERS.map((r) => (
+                                                                                                                    <a
+                                                                                                                    key={r.id}
+                                                                                                                    href={buildRetailerUrl(r, perfume)}
+                                                                                                                    target="_blank"
+                                                                                                                    rel="noopener noreferrer sponsored"
+                                                                                                                    className="flex items-center gap-1.5 rounded-full px-4 py-2 text-xs transition-opacity hover:opacity-80"
+                                                                                                                    style={{ background: "rgba(237,230,218,0.06)", color: "#EDE6DA", border: "1px solid rgba(237,230,218,0.12)" }}
+                                                                                                                    >
+                                                                                                                    {r.name} <ExternalLink size={11} />
+                                                                                                                    </a>
+                                                                                                                    ))}
+                                                                                                                    </div>
+                                                                                                                    
+                                                                                                                    <EmailCapture perfume={perfume} />
+                                                                                                                    
+                                                                                                                    {similar.length > 0 && (
+                                                                                                                    <div className="mt-8">
+                                                                                                                    <div className="mb-3 flex items-center gap-2 text-[11px] uppercase tracking-[0.2em]" style={{ color: "#9C8F7C" }}>
+                                                                                                                    <Sparkles size={13} style={{ color: "#C9922B" }} />
+                                                                                                                    Smells Similar
+                                                                                                                    </div>
+                                                                                                                    <div className="grid gap-2 sm:grid-cols-2">
+                                                                                                                    {similar.map(({ perfume: sp, score }) => (
+                                                                                                                    <button
+                                                                                                                    key={sp.id}
+                                                                                                                    onClick={() => onSelect(sp)}
+                                                                                                                    className="rounded-xl p-3 text-left transition-colors hover:bg-[rgba(237,230,218,0.06)]"
+                                                                                                                    style={{ background: "rgba(237,230,218,0.03)", border: "1px solid rgba(237,230,218,0.08)" }}
+                                                                                                                    >
+                                                                                                                    <div className="text-[10px] uppercase tracking-[0.1em]" style={{ color: "#9C8F7C" }}>
+                                                                                                                    {sp.brand}
+                                                                                                                    </div>
+                                                                                                                    <div className="mt-0.5 flex items-center justify-between">
+                                                                                                                    <span className="text-sm" style={{ color: "#EDE6DA" }}>{sp.name}</span>
+                                                                                                                    <span className="text-[10px]" style={{ color: "#C9922B" }}>
+                                                                                                                    {Math.round(score * 100)}%
+                                                                                                                    </span>
+                                                                                                                    </div>
+                                                                                                                    </button>
+                                                                                                                    ))}
+                                                                                                                    </div>
+                                                                                                                    </div>
+                                                                                                                    )}
+                                                                                                                    </div>
+                                                                                                                    );
+                                                                                                                    }
+                                                                                                                    
+                                                                                                                    export default function PerfumeIntelligence() {
+                                                                                                                    const [query, setQuery] = useState("");
+                                                                                                                    const [selected, setSelected] = useState(null);
+                                                                                                                    
+                                                                                                                    const suggestions = useMemo(() => {
+                                                                                                                    if (!query.trim()) return [];
+                                                                                                                    return PERFUMES.map((p) => ({ perfume: p, score: searchScore(query, p) }))
+                                                                                                                    .filter((r) => r.score > 0)
+                                                                                                                    .sort((a, b) => b.score - a.score)
+                                                                                                                    .slice(0, 6);
+                                                                                                                    }, [query]);
+                                                                                                                    
+                                                                                                                    const similar = useMemo(() => {
+                                                                                                                    if (!selected) return [];
+                                                                                                                    return findSimilar(selected, PERFUMES);
+                                                                                                                    }, [selected]);
+                                                                                                                    
+                                                                                                                    const exampleChips = ["Sauvage", "Aventus", "Baccarat Rouge", "Black Opium", "Santal 33"];
+                                                                                                                    
+                                                                                                                    return (
+                                                                                                                    <div className="min-h-screen w-full" style={{ background: "#0F0D0B" }}>
+                                                                                                                    <style>{`
+                                                                                                                    @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap');
+                                                                                                                    .font-serif { font-family: 'Fraunces', serif; }
+                                                                                                                    * { font-family: 'Inter', sans-serif; }
+                                                                                                                    input::placeholder { color: #6B5F52; }
+                                                                                                                    `}</style>
+                                                                                                                    
+                                                                                                                    <div className="mx-auto max-w-2xl px-5 py-14 sm:py-20">
+                                                                                                                    <div className="mb-10 text-center">
+                                                                                                                    <div className="text-[11px] uppercase tracking-[0.3em]" style={{ color: "#C9922B" }}>
+                                                                                                                    Perfume Intelligence
+                                                                                                                    </div>
+                                                                                                                    <h1 className="font-serif mt-3 text-4xl sm:text-5xl" style={{ color: "#EDE6DA" }}>
+                                                                                                                    Find your fragrance.
+                                                                                                                    </h1>
+                                                                                                                    <p className="mt-3 text-sm" style={{ color: "#9C8F7C" }}>
+                                                                                                                    Notes, ratings, and what to try next — search a perfume to begin.
+                                                                                                                    </p>
+                                                                                                                    </div>
+                                                                                                                    
+                                                                                                                    <div className="relative">
+                                                                                                                    <div
+                                                                                                                    className="flex items-center gap-3 rounded-full px-5 py-4"
+                                                                                                                    style={{ background: "#1A1613", border: "1px solid rgba(201,146,43,0.25)" }}
+                                                                                                                    >
+                                                                                                                    <Search size={18} style={{ color: "#C9922B" }} />
+                                                                                                                    <input
+                                                                                                                    value={query}
+                                                                                                                    onChange={(e) => {
+                                                                                                                    setQuery(e.target.value);
+                                                                                                                    setSelected(null);
+                                                                                                                    }}
+                                                                                                                    placeholder="Try 'Bleu de Chanel' or 'Sauvage'..."
+                                                                                                                    className="w-full bg-transparent text-sm outline-none"
+                                                                                                                    style={{ color: "#EDE6DA" }}
+                                                                                                                    />
+                                                                                                                    {query && (
+                                                                                                                    <button onClick={() => { setQuery(""); setSelected(null); }}>
+                                                                                                                    <X size={16} style={{ color: "#9C8F7C" }} />
+                                                                                                                    </button>
+                                                                                                                    )}
+                                                                                                                    </div>
+                                                                                                                    
+                                                                                                                    {suggestions.length > 0 && !selected && (
+                                                                                                                    <div
+                                                                                                                    className="absolute z-10 mt-2 w-full overflow-hidden rounded-2xl"
+                                                                                                                    style={{ background: "#1A1613", border: "1px solid rgba(237,230,218,0.1)" }}
+                                                                                                                    >
+                                                                                                                    {suggestions.map(({ perfume: p }) => (
+                                                                                                                    <button
+                                                                                                                    key={p.id}
+                                                                                                                    onClick={() => { setSelected(p); setQuery(`${p.brand} ${p.name}`); }}
+                                                                                                                    className="flex w-full items-center justify-between px-5 py-3 text-left transition-colors hover:bg-[rgba(237,230,218,0.05)]"
+                                                                                                                    >
+                                                                                                                    <div>
+                                                                                                                    <span className="text-sm" style={{ color: "#EDE6DA" }}>{p.name}</span>
+                                                                                                                    <span className="ml-2 text-xs" style={{ color: "#9C8F7C" }}>{p.brand}</span>
+                                                                                                                    </div>
+                                                                                                                    <span className="text-[10px] uppercase tracking-wide" style={{ color: "#6B5F52" }}>{p.family}</span>
+                                                                                                                    </button>
+                                                                                                                    ))}
+                                                                                                                    </div>
+                                                                                                                    )}
+                                                                                                                    </div>
+                                                                                                                    
+                                                                                                                    {!selected && (
+                                                                                                                    <div className="mt-5 flex flex-wrap justify-center gap-2">
+                                                                                                                    {exampleChips.map((c) => (
+                                                                                                                    <button
+                                                                                                                    key={c}
+                                                                                                                    onClick={() => setQuery(c)}
+                                                                                                                    className="rounded-full px-3 py-1.5 text-xs transition-colors hover:bg-[rgba(237,230,218,0.06)]"
+                                                                                                                    style={{ color: "#9C8F7C", border: "1px solid rgba(237,230,218,0.1)" }}
+                                                                                                                    >
+                                                                                                                    {c}
+                                                                                                                    </button>
+                                                                                                                    ))}
+                                                                                                                    </div>
+                                                                                                                    )}
+                                                                                                                    
+                                                                                                                    {selected && (
+                                                                                                                    <div className="mt-8">
+                                                                                                                    <ResultCard perfume={selected} onSelect={setSelected} similar={similar} />
+                                                                                                                    </div>
+                                                                                                                    )}
+                                                                                                                    </div>
+                                                                                                                    </div>
+                                                                                                                    );
+                                                                                                                    }
+                                                                                                                    
