@@ -2,11 +2,17 @@
 
 import { useMemo } from "react";
 import Link from "next/link";
-import { familiesInUse, noteIndex } from "@/lib/data";
+import { familiesInUse, noteIndex, perfumes } from "@/lib/data";
 import { recommend } from "@/lib/similarity";
 import { useMounted, useProfile } from "@/lib/store";
 import PerfumeCard from "@/components/PerfumeCard";
 import { Reveal, SplitHeadline } from "@/components/Reveal";
+
+/** Shown before the visitor picks anything: well-reviewed, highly rated perfumes. */
+const FAVOURITES = perfumes
+  .filter((p) => p.scentLens && p.scentLens.totalReviews >= 150)
+  .sort((a, b) => (b.scentLens!.score - a.scentLens!.score) || (b.scentLens!.totalReviews - a.scentLens!.totalReviews))
+  .slice(0, 4);
 
 const FAMILY_MOOD: Record<string, string> = {
   Fresh: "clean air", Aquatic: "sea spray", Citrus: "sunlit peel", Aromatic: "wild herbs", Woody: "dry cedar",
@@ -87,7 +93,10 @@ export default function DiscoverScent() {
 
         <div className="mt-16" aria-live="polite">
           <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-            <h3 id="discover-h" className="font-serif text-3xl text-cave">{empty ? "Pick a family or note to begin" : "Your treasures"}</h3>
+            <div>
+              <h3 id="discover-h" className="font-serif text-3xl text-cave">{empty ? "Crowd favourites" : "Your treasures"}</h3>
+              {empty && <p className="mt-1 text-sm text-ink-mute">Highly rated by hundreds of reviewers. Choose a family or note above to personalise.</p>}
+            </div>
             {!empty && (
               <div className="flex gap-4 text-sm">
                 <Link href={matchesHref(profile.liked, profile.families)} className="link-underline text-cave-600">See all matches →</Link>
@@ -96,8 +105,8 @@ export default function DiscoverScent() {
             )}
           </div>
           {empty ? (
-            <div className="grid grid-cols-2 gap-4 opacity-40 md:grid-cols-4" aria-hidden>
-              {[0, 1, 2, 3].map((i) => <div key={i} className="arch h-56 border border-dashed border-ink/20" />)}
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-5">
+              {FAVOURITES.map((p, i) => <PerfumeCard key={p.slug} perfume={p} index={i} />)}
             </div>
           ) : recs.length ? (
             <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-5">
