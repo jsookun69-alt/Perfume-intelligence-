@@ -21,7 +21,7 @@ export function Logo({ light = false }: { light?: boolean }) {
         <path d="M13 1 3 10v18h20V10L13 1Z" fill="none" stroke="#d4b483" strokeWidth="1.4" />
         <path d="M13 9 9 15l4 6 4-6-4-6Z" fill="#d4b483" />
       </svg>
-      <span className="font-serif text-[1.15rem] leading-none tracking-tight">
+      <span className="font-serif text-[1rem] leading-none tracking-tight sm:text-[1.15rem]">
         Caverne <span className="italic text-champagne-600">d&rsquo;Ali</span> Beauté
       </span>
     </span>
@@ -62,9 +62,9 @@ export default function Nav() {
             </li>
           ))}
         </ul>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           <Magnetic>
-            <button type="button" onClick={() => open()} className={`flex h-10 items-center gap-2 rounded-full border px-3.5 text-[12.5px] transition-colors ${light ? "border-ivory/30 hover:border-champagne-400" : "border-ink/15 hover:border-champagne-600"}`} aria-label="Search perfumes (press / or Ctrl+K)">
+            <button type="button" onClick={() => open()} className={`flex h-10 items-center gap-2 rounded-full border px-3 text-[12.5px] sm:px-3.5 transition-colors ${light ? "border-ivory/30 hover:border-champagne-400" : "border-ink/15 hover:border-champagne-600"}`} aria-label="Search perfumes (press / or Ctrl+K)">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" strokeLinecap="round" /></svg>
               <span className="hidden sm:inline">Search</span>
               <kbd className="hidden rounded border border-current px-1.5 text-[10px] opacity-70 md:inline">⌘K</kbd>
@@ -75,8 +75,10 @@ export default function Nav() {
             {mounted && saved.length > 0 && <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-rose-clay px-1 text-[10px] text-ivory">{saved.length}</span>}
           </Link>
           {mounted && items.length > 0 && (
-            <Link href="/compare" className="hidden h-10 items-center gap-1.5 rounded-full bg-cave-700 px-3.5 text-[12px] text-ivory sm:flex" aria-label={`Compare ${items.length} perfumes`}>
-              Compare <span className="rounded-full bg-champagne-500 px-1.5 text-[10px] text-cave-900">{items.length}</span>
+            <Link href={`/compare?p=${items.join(",")}`} className="flex h-10 items-center gap-1.5 rounded-full bg-cave-700 px-3 text-[12px] text-ivory sm:px-3.5" aria-label={`Compare ${items.length} perfumes`}>
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden fill="none" stroke="currentColor" strokeWidth="1.7" className="sm:hidden"><path d="M7 4v16M17 4v16M3 8h8M13 16h8" strokeLinecap="round" /></svg>
+              <span className="hidden sm:inline">Compare</span>
+              <span className="rounded-full bg-champagne-500 px-1.5 text-[10px] text-cave-900">{items.length}</span>
             </Link>
           )}
           <button type="button" className="grid h-10 w-10 place-items-center lg:hidden" onClick={() => setMenu((m) => !m)} aria-expanded={menu} aria-controls="mobile-menu" aria-label="Menu">
