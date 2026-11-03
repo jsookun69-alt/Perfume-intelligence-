@@ -49,8 +49,7 @@ export default async function PerfumePage({ params }: Params) {
         <div className="mx-auto grid max-w-page gap-8 px-5 md:px-10 lg:grid-cols-2 lg:gap-14">
           <div className="arch cave-bg relative h-[56svh] min-h-[420px] overflow-hidden shadow-[inset_0_0_0_1.5px_rgba(212,180,131,.55)] lg:h-[78svh]">
             <div aria-hidden className="absolute inset-0 bg-[radial-gradient(circle_at_50%_70%,rgba(212,180,131,.25),transparent_60%)]" />
-            <Bottle3D bottle={p.bottle} seed={`${p.house}|${p.name}`} label={`Interactive 3D illustration of the ${p.name} bottle. Drag to rotate.`} interactive className="h-full w-full" />
-            <p className="absolute bottom-5 left-1/2 -translate-x-1/2 whitespace-nowrap text-[11px] uppercase tracking-[0.18em] text-ivory/50">Drag to rotate · illustration</p>
+            <Bottle3D bottle={p.bottle} seed={`${p.house}|${p.name}`} label={`Interactive 3D illustration of the ${p.name} bottle. Drag to rotate.`} interactive hint="Drag to rotate · illustration" className="h-full w-full" />
           </div>
 
           <div className="flex flex-col justify-center pb-6">

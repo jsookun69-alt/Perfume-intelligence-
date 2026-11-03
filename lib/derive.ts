@@ -62,11 +62,12 @@ export function deriveVersatility(seasons: Season[], occasions: Occasion[]) {
 }
 
 /** A hidden gem: strongly rated by real reviewers, yet with a small review footprint or a low price. */
+export const HIDDEN_GEM_MIN_REVIEWS = 20;
 export const HIDDEN_GEM_RULE =
-  "ScentLens 80+ from published ratings, with fewer than 400 total reviews or a price of £30 or less.";
+  "ScentLens 80+ from at least 20 published reviews, with fewer than 400 reviews in total or a price of £30 or less.";
 
 export function isHiddenGem(score: number | null, totalReviews: number, price: number) {
-  if (score == null) return false;
+  if (score == null || totalReviews < HIDDEN_GEM_MIN_REVIEWS) return false;
   return score >= 80 && (totalReviews < 400 || price <= 30);
 }
 

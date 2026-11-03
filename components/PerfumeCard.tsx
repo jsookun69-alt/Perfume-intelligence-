@@ -40,7 +40,7 @@ export default function PerfumeCard({ perfume: p, index = 0, matched }: { perfum
         <BottleSVG bottle={p.bottle} seed={`${p.house}|${p.name}`} className="relative mb-6 h-[74%] w-auto transition-transform duration-700 ease-luxe group-hover:-translate-y-2 group-hover:-rotate-2 group-hover:scale-105" />
         <span className={`absolute bottom-2.5 left-1/2 -translate-x-1/2 rounded-full border px-2.5 py-0.5 text-[10px] uppercase tracking-[0.18em] backdrop-blur ${light ? "border-white/70 bg-white/60 text-ink" : "border-white/30 bg-white/15 text-white"}`}>{p.family}</span>
         {p.isHiddenGem && (
-          <span className="absolute left-3 top-10 rounded-full bg-cave-900/80 px-2.5 py-1 text-[10px] uppercase tracking-[0.16em] text-champagne-300 backdrop-blur md:left-4">◆ Hidden gem</span>
+          <span className="absolute left-1/2 top-3 -translate-x-1/2 whitespace-nowrap rounded-full bg-cave-900/80 px-2.5 py-1 text-[10px] uppercase tracking-[0.16em] text-champagne-300 backdrop-blur">◆ Hidden gem</span>
         )}
       </div>
       <div className="px-1 pb-1 pt-4">

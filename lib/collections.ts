@@ -22,7 +22,7 @@ export const COLLECTIONS: Collection[] = [
     title: "Hidden Gems",
     kicker: "Underrated",
     description: "Loved by the people who've worn them, barely known by everyone else.",
-    rule: "ScentLens 80+ with under 400 published reviews, or 80+ for £30 or less.",
+    rule: "ScentLens 80+ from at least 20 published reviews — with under 400 reviews in total, or for £30 or less.",
     tone: "emerald",
     filter: (p) => p.isHiddenGem,
     sort: byScore,

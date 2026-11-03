@@ -22,8 +22,8 @@ function webglAvailable() {
  * and is replaced by the WebGL scene only when WebGL is supported and motion is allowed.
  * The render loop pauses while the canvas is off-screen.
  */
-export default function Bottle3D({ bottle, seed, label, className, ...props }: Omit<BottleSceneProps, "active"> & {
-  seed: string; label: string; className?: string;
+export default function Bottle3D({ bottle, seed, label, className, hint, ...props }: Omit<BottleSceneProps, "active"> & {
+  seed: string; label: string; className?: string; hint?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [use3D, setUse3D] = useState(false);
@@ -48,6 +48,11 @@ export default function Bottle3D({ bottle, seed, label, className, ...props }: O
         <div className={`absolute inset-0 transition-opacity duration-1000 ${ready ? "opacity-100" : "opacity-0"}`}>
           <BottleScene bottle={bottle} active={inView} {...props} />
         </div>
+      )}
+      {hint && (
+        <p className="pointer-events-none absolute bottom-5 left-1/2 -translate-x-1/2 whitespace-nowrap text-[11px] uppercase tracking-[0.18em] text-ivory/50">
+          {use3D && ready ? hint : "Illustration"}
+        </p>
       )}
     </div>
   );
