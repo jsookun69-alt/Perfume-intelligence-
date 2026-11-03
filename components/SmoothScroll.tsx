@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -9,6 +10,16 @@ gsap.registerPlugin(ScrollTrigger);
 
 /** Lenis smooth scrolling synced with GSAP's ticker. Disabled for reduced-motion users. */
 export default function SmoothScroll() {
+  const pathname = usePathname();
+
+  // start each new page at the top and re-measure scroll animations
+  useEffect(() => {
+    const lenis = (window as unknown as { __lenis?: Lenis }).__lenis;
+    if (!window.location.hash) { lenis?.scrollTo(0, { immediate: true, force: true }); window.scrollTo(0, 0); }
+    const t = setTimeout(() => ScrollTrigger.refresh(), 120);
+    return () => clearTimeout(t);
+  }, [pathname]);
+
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const lenis = new Lenis({ duration: 1.1, easing: (t) => 1 - Math.pow(1 - t, 3), smoothWheel: true });
@@ -29,6 +40,7 @@ export default function SmoothScroll() {
       document.removeEventListener("click", onClick);
       gsap.ticker.remove(tick);
       lenis.destroy();
+      delete (window as unknown as { __lenis?: Lenis }).__lenis;
     };
   }, []);
   return null;

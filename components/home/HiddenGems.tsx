@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { Perfume } from "@/lib/types";
@@ -15,7 +15,8 @@ export default function HiddenGems({ gems }: { gems: Perfume[] }) {
   const section = useRef<HTMLElement>(null);
   const track = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  // useLayoutEffect so the pin is undone before React removes this DOM on navigation
+  useLayoutEffect(() => {
     const s = section.current, t = track.current;
     if (!s || !t) return;
     const mm = gsap.matchMedia();
@@ -26,10 +27,11 @@ export default function HiddenGems({ gems }: { gems: Perfume[] }) {
         scrollTrigger: { trigger: s, start: "top top", end: () => `+=${dist()}`, scrub: 0.8, pin: true, invalidateOnRefresh: true },
       });
     });
-    return () => mm.revert();
+    return () => { mm.revert(); ScrollTrigger.refresh(); };
   }, []);
 
   return (
+    <div>
     <section ref={section} className="cave-bg relative overflow-hidden py-24 text-ivory lg:flex lg:h-screen lg:flex-col lg:justify-center lg:py-0" aria-labelledby="gems-h">
       <div className="mx-auto mb-10 flex w-full max-w-page flex-wrap items-end justify-between gap-6 px-5 md:px-10">
         <div>
@@ -55,5 +57,6 @@ export default function HiddenGems({ gems }: { gems: Perfume[] }) {
         </div>
       </div>
     </section>
+    </div>
   );
 }
