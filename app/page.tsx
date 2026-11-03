@@ -2,7 +2,6 @@ import { getPerfume, noteIndex, perfumes } from "@/lib/data";
 import { COLLECTIONS, collectionItems } from "@/lib/collections";
 import Hero from "@/components/home/Hero";
 import DiscoverScent from "@/components/home/DiscoverScent";
-import HiddenGems from "@/components/home/HiddenGems";
 import FragranceIntelligence from "@/components/home/FragranceIntelligence";
 import CollectionsShowcase from "@/components/home/CollectionsShowcase";
 import CompareTeaser from "@/components/home/CompareTeaser";
@@ -27,7 +26,6 @@ export default function Home() {
     <>
       <Hero featured={featured} notes={noteIndex.slice(0, 24).map((n) => n.note)} />
       <DiscoverScent />
-      <HiddenGems gems={gems} />
       <FragranceIntelligence examples={examples.length ? examples : perfumes.slice(0, 5)} />
       <CollectionsShowcase tiles={tiles} />
       <CompareTeaser initial={[compareA, compareB]} />

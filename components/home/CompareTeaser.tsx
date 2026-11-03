@@ -29,7 +29,7 @@ export default function CompareTeaser({ initial }: { initial: [string, string] }
   return (
     <section className="cave-bg py-28 text-ivory md:py-40" aria-labelledby="compare-h">
       <div className="mx-auto max-w-page px-5 md:px-10">
-        <p className="eyebrow text-champagne-400">06 — Compare &amp; discover</p>
+        <p className="eyebrow text-champagne-400">05 — Compare &amp; discover</p>
         <SplitHeadline className="h-section mt-5" lines={["Two treasures,", <em key="e" className="gold-text italic">side by side.</em>]} />
 
         <div className="mt-14 grid gap-6 lg:grid-cols-[1fr_auto_1fr]">

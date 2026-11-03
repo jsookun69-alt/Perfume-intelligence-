@@ -20,7 +20,7 @@ export default function CollectionsShowcase({ tiles }: { tiles: CollectionTile[]
       <div className="mx-auto max-w-page px-5 md:px-10">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
-            <p className="eyebrow text-champagne-700">05 — Explore the collections</p>
+            <p className="eyebrow text-champagne-700">04 — Explore the collections</p>
             <SplitHeadline className="h-section mt-5 text-cave" lines={["Chambers of", <em key="e" className="italic text-champagne-700">the cave.</em>]} />
           </div>
           <Link href="/collections" className="link-underline text-cave-600">All collections →</Link>

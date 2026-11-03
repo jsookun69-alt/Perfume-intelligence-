@@ -17,7 +17,7 @@ export default function StoriesSection() {
       <div className="mx-auto max-w-page px-5 md:px-10">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
-            <p className="eyebrow text-champagne-700">07 — Editorial</p>
+            <p className="eyebrow text-champagne-700">06 — Editorial</p>
             <SplitHeadline className="h-section mt-5 text-cave" lines={["Stories from", <em key="e" className="italic text-champagne-700">the cave.</em>]} />
           </div>
           <Link href="/stories" className="link-underline text-cave-600">All stories →</Link>

@@ -25,7 +25,7 @@ export default function FragranceIntelligence({ examples }: { examples: Perfume[
   return (
     <section className="relative overflow-hidden bg-ivory-200/60 py-28 md:py-40" aria-labelledby="intel-h">
       <div className="mx-auto max-w-page px-5 md:px-10">
-        <p className="eyebrow text-champagne-700">04 — Fragrance intelligence</p>
+        <p className="eyebrow text-champagne-700">03 — Fragrance intelligence</p>
         <SplitHeadline className="h-section mt-5 max-w-4xl text-cave" lines={["Understand a perfume", <em key="e" className="italic text-champagne-700">before you smell it.</em>]} />
 
         <div className="mt-12 grid gap-10 lg:grid-cols-[.9fr_1.1fr]">
