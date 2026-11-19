@@ -5,7 +5,7 @@
 #   streamer/split-screen.sh <model_video> <gameplay_video> <output.mp4> [gameplay_start_seconds] [model_focus]
 #
 #   model_focus: where to crop the 9:16 model clip to fit the 1080x960 top half.
-#                0.0 = keep the top of the frame, 0.5 = centre (default 0.3, keeps face + hands)
+#                0.0 = keep the top of the frame, 0.5 = centre (default 0.4, keeps face + controller for a seated shot)
 #
 # Audio comes from the gameplay clip. Output length = the shorter of the two inputs.
 set -euo pipefail
@@ -14,7 +14,7 @@ MODEL="${1:?model video required}"
 GAME="${2:?gameplay video required}"
 OUT="${3:?output path required}"
 START="${4:-0}"
-FOCUS="${5:-0.3}"
+FOCUS="${5:-0.4}"
 
 W=1080
 HALF=960
