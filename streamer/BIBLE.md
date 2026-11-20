@@ -91,5 +91,9 @@ misspelled shirt print, watermark, subtitles, on-screen captions, changing room 
 1. Build one **still per shirt** first (character + room + camera + shirt). Owner approves it.
 2. Animate only approved stills (start frame = the still). Shots are 10 s; stitch 3 for 30 s.
 3. Never change a locked block without updating this file.
-4. Final edit: `split-screen.sh` — Rae on top, GTA 6 gameplay on the bottom.
+4. Final edit layouts:
+   - **Video 1 (launch):** `split-screen.sh` — equal halves, Rae on top, GTA 6 gameplay on the bottom.
+   - **Every video after:** `facecam-circle.sh` — gameplay full screen, Rae in a small round facecam
+     (default top-right, purple ring). Options via env vars: `CORNER`, `SIZE`, `GAME_FIT=fit`, etc.
+   - Audio in both: Rae's voice on top, gameplay mixed under it and dipped while she talks.
 5. Posts are labelled as AI-generated.
