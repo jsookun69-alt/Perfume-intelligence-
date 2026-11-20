@@ -7,8 +7,6 @@ Only the `[SHIRT]` and `[ACTION]` slots change between videos.
 - Face reference: `refs/rae-face-reference.png`
 - Room + framing master: `refs/room-master.png`
 
-> Items marked **(CONFIRM)** are waiting on an answer from the owner.
-
 ---
 
 ## 1. CHARACTER block (locked)
@@ -19,10 +17,11 @@ a few faint freckles across her nose and cheeks, natural full eyebrows, dark bro
 almond-shaped eyes, a straight nose and full natural lips. Minimal natural makeup,
 bare-skin look, no heavy eyeliner, no lipstick. Dark brown-black tightly coiled
 3C curly hair, shoulder length, pulled back into a loose high curly ponytail with
-a few curly strands loose at the temples. Slim athletic build. Short natural nails.
+a few curly strands loose at the temples. Small diamond stud earrings.
+Slim athletic build. Short natural nails.
 ```
 
-Accessories: small thin gold hoop earrings **(CONFIRM: keep them?)**
+Accessories (locked): `small diamond stud earrings`
 
 ## 2. ROOM block (locked)
 
@@ -44,12 +43,11 @@ along the baseboard. Dark wood floor. Pale window blinds at the far right edge.
 
 ```
 Vertical 9:16 photo-realistic handheld phone shot from her front-right at seated
-eye level, three-quarter side view. She sits facing left toward an off-screen
-monitor. Framed from the shelf of figures down to her knees. Natural skin texture,
+eye level. Her chair and body are angled toward an off-screen monitor on the left,
+with her face turned toward the camera so her face and the front of her shirt are
+clearly visible. Framed from the shelf of figures down to her knees. Natural skin texture,
 realistic soft purple ambient light with warm ring-light fill on her face.
 ```
-
-**(CONFIRM: profile toward the screen like the master image, or turned toward camera?)**
 
 ## 4. PROPS (locked)
 
@@ -68,14 +66,14 @@ Bottoms (locked): `black high-waisted bike shorts`
 |----|------|----------------------------|-------------|
 | tee-01 | (TBC) | (TBC) | `refs/shirts/tee-01.png` |
 
-Fit (CONFIRM): `oversized relaxed-fit crew-neck T-shirt, short sleeves` — tucked or untucked?
+Fit (locked): `fitted short-sleeve crew-neck T-shirt` + design description, print centred on the chest
 
 ## 6. ACTION slot (varies per shot)
 
 Examples:
 - `She plays intently, eyes on the screen, thumbs working the sticks.`
 - `She leans forward in concentration, then breaks into a big laugh.`
-- `She turns from the screen to the camera and smiles, pointing at her shirt.`
+- `She glances at the screen, then back to camera and smiles, pointing at her shirt.`
 
 ## 7. NEGATIVE (locked)
 
