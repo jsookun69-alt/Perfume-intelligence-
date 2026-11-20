@@ -21,8 +21,6 @@ a few curly strands loose at the temples. Small diamond stud earrings.
 Slim athletic build. Short natural nails.
 ```
 
-Accessories (locked): `small diamond stud earrings`
-
 ## 2. ROOM block (locked)
 
 ```
@@ -79,8 +77,8 @@ Examples:
 
 ```
 cartoon, CGI, plastic skin, heavy makeup, straightened hair, different hairstyle,
-different face, extra fingers, distorted hands, warped controller, text, logos,
-watermark, subtitles, changing room layout
+different face, extra fingers, distorted hands, warped controller, warped or
+misspelled shirt print, watermark, subtitles, on-screen captions, changing room layout
 ```
 
 ---
