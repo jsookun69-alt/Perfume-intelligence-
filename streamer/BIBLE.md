@@ -5,7 +5,10 @@ Only the `[SHIRT]` and `[ACTION]` slots change between videos.
 
 - Studio character: **Rae Calloway** (`@raecalloway.xx`), influencer_id `e0a4de8d-040a-4c67-935b-bd66a361ea25`
 - Face reference: `refs/rae-face-reference.png`
-- Room + framing master: `refs/room-master.png`
+- Original room inspiration: `refs/room-master.png`
+- **MASTER STILL (approved): `refs/master-still.png`**, source URL
+  `https://v3b.fal.media/files/b/0ab33bfe/Oyg6nVVPHJ31lcLIMV5qN_XWsxKuui.png`
+  Every shirt still is an **edit of this image** (change the shirt only) so face, room and light never drift.
 
 ---
 
@@ -62,9 +65,9 @@ Bottoms (locked): `black high-waisted bike shorts`
 
 | id | Name | Description used in prompt | Design file |
 |----|------|----------------------------|-------------|
-| tee-01 | (TBC) | (TBC) | `refs/shirts/tee-01.png` |
+| tee-01 | Gamma Rae — Black | Black crew-neck tee. Small logo on the wearer's left chest: the word "GAMMA" in bold white italic sans-serif capitals, below it "RAE" in bold hot-pink italic capitals, a white four-point sparkle star to the left of "RAE", and a thin hot-pink swoosh arc curving over "GAMMA". Rest of the shirt plain. | `refs/shirts/tee-01-gamma-rae-black.jpg` |
 
-Fit (locked): `fitted short-sleeve crew-neck T-shirt` + design description, print centred on the chest
+Fit (locked): `fitted short-sleeve crew-neck T-shirt` + design description, print placement as specified per shirt
 
 ## 6. ACTION slot (varies per shot)
 
